@@ -46,6 +46,9 @@ namespace Saml2.Authentication.Core.Bindings.SignatureProviders
 
         public ISignatureProvider CreateFromAlgorithmName(Type signingKeyType, ShaHashingAlgorithm hashingAlgorithm)
         {
+            System.Console.WriteLine("[ShaHashingAlgorithm][CreateFromAlgorithmName] => signingKeyType: " + signingKeyType);
+            System.Console.WriteLine("[ShaHashingAlgorithm][CreateFromAlgorithmName] => hashingAlgorithm: " + hashingAlgorithm);
+
             if (signingKeyType.IsSubclassOf(typeof(RSA)))
             {
                 switch (hashingAlgorithm)

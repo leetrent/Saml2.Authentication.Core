@@ -46,10 +46,23 @@ namespace Saml2.Authentication.Core.Services
 
         public string GetAuthnRequest(string authnRequestId, string relayState, string assertionConsumerServiceUrl)
         {
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => authnRequestId: " + authnRequestId);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => relayState: " + relayState);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => assertionConsumerServiceUrl: " + assertionConsumerServiceUrl);
+
             var signingCertificate = _certificateProvider.GetCertificate();
+
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => signingCertificate: " + signingCertificate);
 
             var saml20AuthnRequest =
                 _saml2MessageFactory.CreateAuthnRequest(authnRequestId, assertionConsumerServiceUrl);
+
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest: " + saml20AuthnRequest);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => signingCertificate.ServiceProvider.PrivateKey: " + signingCertificate.ServiceProvider.PrivateKey);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => _identityProviderConfiguration.HashingAlgorithm: " + _identityProviderConfiguration.HashingAlgorithm);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => relayState: " + relayState);
+
+
             // check protocol binding if supporting more than HTTP-REDIRECT
             return _httpRedirectBinding.BuildAuthnRequestUrl(saml20AuthnRequest,
                 signingCertificate.ServiceProvider.PrivateKey,

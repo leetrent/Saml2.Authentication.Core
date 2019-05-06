@@ -324,9 +324,14 @@ namespace DemoWebApp.Controllers
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             System.Console.WriteLine("[AccountController][ExternalLoginCallback][HttpGet] => _signInManager.ExternalLoginSignInAsync(): " + result);
 
+            System.Console.WriteLine("[AccountController][ExternalLoginCallback][HttpGet] => result.Succeeded: " + result.Succeeded);
+
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
+
+                System.Console.WriteLine("[AccountController][ExternalLoginCallback][HttpGet] => Redirecting to: " + returnUrl);
+
                 return RedirectToLocal(returnUrl);
             }
             if (result.IsLockedOut)

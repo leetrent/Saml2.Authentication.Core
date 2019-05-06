@@ -40,21 +40,21 @@ namespace DemoWebApp
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IUserClaimsPrincipalFactory<ApplicationUser>, DemoWebAppClaimsPrincipalFactory>();
 
-            //services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2:Sustainsys"));
-            services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2:MaxGov"));
+            services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2:Sustainsys"));
+            // services.Configure<Saml2Configuration>(Configuration.GetSection("Saml2:MaxGov"));
 
             services.AddSaml();
             //services.AddSigningCertificatesFromFile(
                 //"certificates\\demowebapp.local.pfx", "pass", X509KeyStorageFlags.PersistKeySet,
                 //"certificates\\stubidp.sustainsys.com.cer");
 
-            //services.AddSigningCertificatesFromFile(
-                //"certificates/demowebapp.local.pfx", "pass", X509KeyStorageFlags.PersistKeySet,
-                //"certificates/stubidp.sustainsys.com.cer");
-
             services.AddSigningCertificatesFromFile(
                 "certificates/demowebapp.local.pfx", "pass", X509KeyStorageFlags.PersistKeySet,
-                "certificates/maxgovdev.pem");
+                "certificates/stubidp.sustainsys.com.cer");
+
+            // services.AddSigningCertificatesFromFile(
+            //     "certificates/demowebapp.local.pfx", "pass", X509KeyStorageFlags.PersistKeySet,
+            //     "certificates/maxgovdev.pem");
 
 
             services.AddAuthentication()

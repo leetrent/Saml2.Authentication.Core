@@ -99,7 +99,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
         {
-            System.Console.WriteLine("[Saml2Handler][HandleChallengeAsync]=>");
+            System.Console.WriteLine("[Saml2Handler][HandleChallengeAsync] =>");
 
             _logger.LogDebug($"Entering {nameof(HandleChallengeAsync)}", properties);
 
@@ -108,9 +108,16 @@ namespace Saml2.Authentication.Core.Authentication
             var authnRequestId = CreateUniqueId();
             properties.Items.Add(AuthnRequestIdKey, authnRequestId);
 
+
+            System.Console.WriteLine("[Saml2Handler][HandleChallengeAsync] => AuthnRequestIdKey: " + AuthnRequestIdKey);
+            System.Console.WriteLine("[Saml2Handler][HandleChallengeAsync] => authnRequestId: " + authnRequestId);
+
             await _sessionStore.SaveAsync<AuthenticationProperties>(properties);
             var requestUrl = _samlService.GetAuthnRequest(authnRequestId, null,
                 $"{Request.GetBaseUrl()}/{Options.AssertionConsumerServiceUrl}");
+
+
+            System.Console.WriteLine("[Saml2Handler][HandleChallengeAsync] => requestUrl: " + requestUrl);
 
             _logger.LogDebug($"Method={nameof(HandleChallengeAsync)}. Redirecting to saml identity provider for SSO. Url={requestUrl}");
             Context.Response.Redirect(requestUrl, true);
@@ -118,11 +125,13 @@ namespace Saml2.Authentication.Core.Authentication
 
         private async Task<bool> HandleSignOut()
         {
-            System.Console.WriteLine("[Saml2Handler][HandleSignOut]=>");
+            System.Console.WriteLine("[Saml2Handler][HandleSignOut] =>");
+            System.Console.WriteLine("[Saml2Handler][HandleSignOut] => Options.SingleLogoutServiceUrl: '" + Options.SingleLogoutServiceUrl + "'");
 
             if (!Request.Path.Value.EndsWith(Options.SingleLogoutServiceUrl, StringComparison.OrdinalIgnoreCase)
                 || !_httpRedirectBinding.IsValid(Context.Request))
             {
+                System.Console.WriteLine("[Saml2Handler][HandleSignOut] => returning false");
                 return false;
             }
 
@@ -176,7 +185,7 @@ namespace Saml2.Authentication.Core.Authentication
             if (!Request.Path.Value.EndsWith(Options.AssertionConsumerServiceUrl, StringComparison.OrdinalIgnoreCase)
                 || !_httpRedirectBinding.IsValid(Context.Request))
             {
-                System.Console.WriteLine("[Saml2Handler][HandleSignIn] => Returning false");
+                System.Console.WriteLine("[Saml2Handler][HandleSignIn] => returning false");
                 return false;
             }
 
@@ -212,19 +221,23 @@ namespace Saml2.Authentication.Core.Authentication
 
         private async Task<bool> HandleHttpArtifact()
         {
-            System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact]=>");
+            System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact] => Options.AssertionConsumerServiceUrl: '" + Options.AssertionConsumerServiceUrl + "'");
+            System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact] => Request.Path.Value.................: '" + Request.Path.Value + "'");
 
             if (!Request.Path.Value.EndsWith(Options.AssertionConsumerServiceUrl, StringComparison.OrdinalIgnoreCase)
                 || !_httpArtifactBinding.IsValid(Context.Request))
             {
+                System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact] => returning false");
                 return false;
             }
 
             _logger.LogDebug($"Entering {nameof(HandleHttpArtifact)}");
             
             var properties = await _sessionStore.LoadAsync<AuthenticationProperties>() ?? new AuthenticationProperties();
-           
             properties.Items.TryGetValue(AuthnRequestIdKey, out string initialAuthnRequestId);
+
+            System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact] => AuthnRequestIdKey: " + AuthnRequestIdKey);
+            System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact] => initialAuthnRequestId: " + initialAuthnRequestId);
 
             var assertion = _samlService.HandleHttpArtifactResponse(Context.Request, initialAuthnRequestId);
             await SignIn(assertion, properties);
@@ -242,11 +255,16 @@ namespace Saml2.Authentication.Core.Authentication
 
         private async Task SignIn(Saml2Assertion assertion, AuthenticationProperties authenticationProperties)
         {
-            System.Console.WriteLine("[Saml2Handler][SignIn]=>");
+            System.Console.WriteLine("[Saml2Handler][SignIn] =>");
 
             var claims = _claimFactory.Create(assertion);
             var identity = new ClaimsIdentity(claims, Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
+
+            System.Console.WriteLine("[Saml2Handler][SignIn] => claims: " + claims);
+            System.Console.WriteLine("[Saml2Handler][SignIn] => identity: " + identity);
+            System.Console.WriteLine("[Saml2Handler][SignIn] => principal: " + principal);
+
             await Context.SignInAsync(Options.SignInScheme, principal, authenticationProperties);
         }
 
