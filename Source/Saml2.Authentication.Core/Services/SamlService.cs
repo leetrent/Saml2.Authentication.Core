@@ -46,18 +46,33 @@ namespace Saml2.Authentication.Core.Services
 
         public string GetAuthnRequest(string authnRequestId, string relayState, string assertionConsumerServiceUrl)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[SamlService][GetAuthnRequest] => authnRequestId: " + authnRequestId);
             System.Console.WriteLine("[SamlService][GetAuthnRequest] => relayState: " + relayState);
             System.Console.WriteLine("[SamlService][GetAuthnRequest] => assertionConsumerServiceUrl: " + assertionConsumerServiceUrl);
 
             var signingCertificate = _certificateProvider.GetCertificate();
 
-            System.Console.WriteLine("[SamlService][GetAuthnRequest] => signingCertificate: " + signingCertificate);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => signingCertificate.IdentityProvider: " + signingCertificate.IdentityProvider);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => signingCertificate.ServiceProvider: " + signingCertificate.ServiceProvider);
 
             var saml20AuthnRequest =
                 _saml2MessageFactory.CreateAuthnRequest(authnRequestId, assertionConsumerServiceUrl);
 
-            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest: " + saml20AuthnRequest);
+            System.Console.WriteLine("");
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.ID: " + saml20AuthnRequest.ID);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.Issuer: " + saml20AuthnRequest.Issuer);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.ForceAuthn: " + saml20AuthnRequest.ForceAuthn);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.IsPassive: " + saml20AuthnRequest.IsPassive);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.Destination: " + saml20AuthnRequest.Destination);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.IssuerFormat: " + saml20AuthnRequest.IssuerFormat);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.IssueInstant: " + saml20AuthnRequest.IssueInstant);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.ProtocolBinding: " + saml20AuthnRequest.ProtocolBinding);
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.Request.AssertionConsumerServiceUR: " + saml20AuthnRequest.Request.AssertionConsumerServiceURL);
+            System.Console.WriteLine("");
+
+
+            System.Console.WriteLine("[SamlService][GetAuthnRequest] => saml20AuthnRequest.GetXml(): " + saml20AuthnRequest.GetXml());
             System.Console.WriteLine("[SamlService][GetAuthnRequest] => signingCertificate.ServiceProvider.PrivateKey: " + signingCertificate.ServiceProvider.PrivateKey);
             System.Console.WriteLine("[SamlService][GetAuthnRequest] => _identityProviderConfiguration.HashingAlgorithm: " + _identityProviderConfiguration.HashingAlgorithm);
             System.Console.WriteLine("[SamlService][GetAuthnRequest] => relayState: " + relayState);

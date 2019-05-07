@@ -52,6 +52,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         public async Task<bool> HandleRequestAsync()
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][HandleRequestAsync]=>");
 
             if (await HandleSignIn())
@@ -69,6 +70,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         public async Task SignOutAsync(AuthenticationProperties properties)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][SignOutAsync]=>");
 
             _logger.LogDebug($"Entering {nameof(SignOutAsync)}", properties);
@@ -92,6 +94,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][HandleAuthenticateAsync]=>");
 
             return Task.FromResult(AuthenticateResult.Fail("Not supported"));
@@ -99,6 +102,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][HandleChallengeAsync] =>");
 
             _logger.LogDebug($"Entering {nameof(HandleChallengeAsync)}", properties);
@@ -119,12 +123,16 @@ namespace Saml2.Authentication.Core.Authentication
 
             System.Console.WriteLine("[Saml2Handler][HandleChallengeAsync] => requestUrl: " + requestUrl);
 
+            System.Console.WriteLine("");
             _logger.LogDebug($"Method={nameof(HandleChallengeAsync)}. Redirecting to saml identity provider for SSO. Url={requestUrl}");
+            System.Console.WriteLine("");
+
             Context.Response.Redirect(requestUrl, true);
         }
 
         private async Task<bool> HandleSignOut()
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][HandleSignOut] =>");
             System.Console.WriteLine("[Saml2Handler][HandleSignOut] => Options.SingleLogoutServiceUrl: '" + Options.SingleLogoutServiceUrl + "'");
 
@@ -179,6 +187,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         private async Task<bool> HandleSignIn()
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][HandleSignIn] => Options.AssertionConsumerServiceUrl: '" + Options.AssertionConsumerServiceUrl + "'");
             System.Console.WriteLine("[Saml2Handler][HandleSignIn] => Request.Path.Value.................: '" + Request.Path.Value + "'");
 
@@ -221,6 +230,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         private async Task<bool> HandleHttpArtifact()
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact] => Options.AssertionConsumerServiceUrl: '" + Options.AssertionConsumerServiceUrl + "'");
             System.Console.WriteLine("[Saml2Handler][HandleHttpArtifact] => Request.Path.Value.................: '" + Request.Path.Value + "'");
 
@@ -255,6 +265,7 @@ namespace Saml2.Authentication.Core.Authentication
 
         private async Task SignIn(Saml2Assertion assertion, AuthenticationProperties authenticationProperties)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[Saml2Handler][SignIn] =>");
 
             var claims = _claimFactory.Create(assertion);

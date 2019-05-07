@@ -99,13 +99,16 @@ namespace Saml2.Authentication.Core.Bindings
         public string BuildAuthnRequestUrl(Saml2AuthnRequest saml2AuthnRequest, AsymmetricAlgorithm signingKey,
             string hashingAlgorithm, string relayState)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][BuildAuthnRequestUrl] => saml2AuthnRequest: "   + saml2AuthnRequest);
             System.Console.WriteLine("[HttpRedirectBinding][BuildAuthnRequestUrl] => hashingAlgorithm: "    + hashingAlgorithm);
             System.Console.WriteLine("[HttpRedirectBinding][BuildAuthnRequestUrl] => relayState: "          + relayState);
 
             var request = saml2AuthnRequest.GetXml().OuterXml;
 
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][BuildAuthnRequestUrl] => request: " + request);
+            System.Console.WriteLine("");
 
             return BuildRequestUrl(signingKey, hashingAlgorithm, relayState, request, saml2AuthnRequest.Destination);
         }
@@ -172,15 +175,17 @@ namespace Saml2.Authentication.Core.Bindings
         private void AddSignature(StringBuilder result, AsymmetricAlgorithm signingKey,
             ShaHashingAlgorithm hashingAlgorithm)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => result: " + result);
             System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => signingKey: " + signingKey);
             System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => hashingAlgorithm: " + hashingAlgorithm);
+            System.Console.WriteLine("");
 
             if (signingKey == null)
                 return;
 
             result.Append(string.Format("&{0}=", HttpRedirectBindingConstants.SigAlg));
-            System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => result: " + result);
+            //System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => result: " + result);
 
             var signingProvider =
                 _signatureProviderFactory.CreateFromAlgorithmName(signingKey.GetType(), hashingAlgorithm);
@@ -192,7 +197,7 @@ namespace Saml2.Authentication.Core.Bindings
             System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => urlEncoded: " + urlEncoded);
 
             result.Append(urlEncoded.UpperCaseUrlEncode());
-            System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => result: " + result);
+            //System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => result: " + result);
 
             // Calculate the signature of the URL as described in [SAMLBind] section 3.4.4.1.            
             var signature = signingProvider.SignData(signingKey, Encoding.UTF8.GetBytes(result.ToString()));
@@ -202,18 +207,23 @@ namespace Saml2.Authentication.Core.Bindings
             result.AppendFormat("&{0}=", HttpRedirectBindingConstants.Signature);
             result.Append(HttpUtility.UrlEncode(Convert.ToBase64String(signature)));
 
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][AddSignature] => result: " + result);
+            System.Console.WriteLine("");
         }
 
         private string BuildRequestUrl(AsymmetricAlgorithm signingKey, string hashingAlgorithm, string relayState,
             string request, string destination)
         {
-
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][BuildRequestUrl] => signingKey: " + signingKey);
             System.Console.WriteLine("[HttpRedirectBinding][BuildRequestUrl] => hashingAlgorithm: " + hashingAlgorithm);
             System.Console.WriteLine("[HttpRedirectBinding][BuildRequestUrl] => relayState: " + relayState);
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][BuildRequestUrl] => request: " + request);
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][BuildRequestUrl] => destination: " + destination);
+            System.Console.WriteLine("");
 
             var shaHashingAlgorithm = _signatureProviderFactory.ValidateShaHashingAlgorithm(hashingAlgorithm);
 
@@ -229,7 +239,9 @@ namespace Saml2.Authentication.Core.Bindings
             AddSignature(result, signingKey, shaHashingAlgorithm);
 
             System.Console.WriteLine("[HttpRedirectBinding][BuildRequestUrl] => destination: " + destination);
+            System.Console.WriteLine("");
             System.Console.WriteLine("[HttpRedirectBinding][BuildRequestUrl] => result: " + result);
+            System.Console.WriteLine("");
 
             return $"{destination}?{result}";
         }

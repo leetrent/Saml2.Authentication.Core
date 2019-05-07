@@ -286,9 +286,10 @@ namespace DemoWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[AccountController][ExternalLogin][HttpPost] => provider.: " + provider);
             System.Console.WriteLine("[AccountController][ExternalLogin][HttpPost] => returnUrl: " + returnUrl);
-
+    
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -303,6 +304,7 @@ namespace DemoWebApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[AccountController][ExternalLoginCallback][HttpGet] => returnUrl: " + returnUrl);
             System.Console.WriteLine("[AccountController][ExternalLoginCallback][HttpGet] => remoteError: " + remoteError);
 
@@ -353,6 +355,7 @@ namespace DemoWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginViewModel model, string returnUrl = null)
         {
+            System.Console.WriteLine("");
             System.Console.WriteLine("[AccountController][ExternalLoginConfirmation][HttpPost]=>");
 
             if (ModelState.IsValid)
